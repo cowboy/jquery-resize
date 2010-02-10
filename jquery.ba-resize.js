@@ -1,5 +1,5 @@
 /*!
- * jQuery resize event - v1.0pre - ??/??/2010
+ * jQuery resize event - v1.0 - 2/9/2010
  * http://benalman.com/projects/jquery-resize-plugin/
  * 
  * Copyright (c) 2010 "Cowboy" Ben Alman
@@ -9,7 +9,7 @@
 
 // Script: jQuery resize event
 //
-// *Version: 1.0pre, Last updated: ??/??/2010*
+// *Version: 1.0, Last updated: 2/9/2010*
 // 
 // Project Home - http://benalman.com/projects/jquery-resize-plugin/
 // GitHub       - http://github.com/cowboy/jquery-resize/
@@ -24,7 +24,7 @@
 // 
 // About: Examples
 // 
-// This working example, complete with fully commented code, illustrates  a few
+// This working example, complete with fully commented code, illustrates a few
 // ways in which this plugin can be used.
 // 
 // resize event - http://benalman.com/code/projects/jquery-resize/examples/resize/
@@ -35,13 +35,13 @@
 // tested with, what browsers it has been tested in, and where the unit tests
 // reside (so you can test it yourself).
 // 
-// jQuery Versions - 1.4.1, 1.3.2
+// jQuery Versions - 1.3.2, 1.4.1, 1.4.2pre
 // Browsers Tested - Internet Explorer 6-8, Firefox 2-3.6, Safari 3-4, Chrome, Opera 9.6-10.1.
 // Unit Tests      - http://benalman.com/code/projects/jquery-resize/unit/
 // 
 // About: Release History
 // 
-// 1.0pre - (??/??/2010) Pre-Initial release
+// 1.0 - (2/9/2010) Initial release
 
 (function($,window,undefined){
   '$:nomunge'; // Used by YUI compressor.
@@ -110,12 +110,12 @@
   // While this plugin works in jQuery 1.3.2, if an element's event callbacks
   // are manually triggered via .trigger( 'resize' ) or .resize() those
   // callbacks may double-fire, due to limitations in the jQuery 1.3.2 special
-  // events system. This is not an issue in jQuery 1.4+.
+  // events system. This is not an issue when using jQuery 1.4+.
   // 
-  // > // The workaround for this in jQuery 1.4+
+  // > // While this works in jQuery 1.4+
   // > $(elem).css({ width: new_w, height: new_h }).resize();
   // > 
-  // > // Is to do this in jQuery 1.3.2
+  // > // In jQuery 1.3.2, you need to do this:
   // > var elem = $(elem);
   // > elem.css({ width: new_w, height: new_h });
   // > elem.data( 'resize-special-event', { width: elem.width(), height: elem.height() } );
@@ -169,7 +169,7 @@
     
     // Called every time a 'resize' event callback is bound per element (new in
     // jQuery 1.4).
-    add: function( handler, data, namespaces ) {
+    add: function( handleObj ) {
       // Since window has its own native 'resize' event, return false so that
       // jQuery doesn't modify the event object. Unless, of course, we're
       // throttling the 'resize' event for window.
@@ -177,28 +177,19 @@
       
       var old_handler;
       
-      // The new_handler function is executed every time the event is triggered
-      // whether internally or manually via .trigger( 'resize' ) or .resize().
+      // The new_handler function is executed every time the event is triggered.
       // This is used to update the internal element data store with the width
       // and height when the event is triggered manually, to avoid double-firing
-      // of the event callback. Unfortunately, jQuery 1.3.2 can't utilize this
-      // method, so the workaround for this in jQuery 1.4+:
-      // 
-      //  $(elem).css({ width: new_w, height: new_h }).resize();
-      // 
-      // Is to do this in jQuery 1.3.2:
-      // 
-      //  var elem = $(elem);
-      //  elem.css({ width: new_w, height: new_h });
-      //  elem.data( 'resize-event-data', { width: elem.width(), height: elem.height() } );
-      //  elem.resize();
-      //
-      // Or, alternately, just don't manually trigger the event in jQuery 1.3.2!
+      // of the event callback. See the "Double firing issue in jQuery 1.3.2"
+      // comments above for more information.
       
       function new_handler( e, w, h ) {
         var elem = $(this),
           data = elem.data( str_data );
         
+        // If called from the polling loop, w and h will be passed in as
+        // arguments. If called manually, via .trigger( 'resize' ) or .resize(),
+        // those values will need to be computed.
         data.w = w !== undefined ? w : elem.width();
         data.h = h !== undefined ? h : elem.height();
         
@@ -207,16 +198,14 @@
       
       // This may seem a little complicated, but it normalizes the special event
       // .add method between jQuery 1.4/1.4.1 and 1.4.2+
-      if ( $.isFunction( handler ) ) {
+      if ( $.isFunction( handleObj ) ) {
         // 1.4, 1.4.1
-        old_handler = handler;
+        old_handler = handleObj;
         return new_handler;
       } else {
         // 1.4.2+
-        data = handler.data;
-        namespaces = handler.namespaces;
-        old_handler = handler.handler;
-        handler.handler = new_handler;
+        old_handler = handleObj.handler;
+        handleObj.handler = new_handler;
       }
     }
     

@@ -46,7 +46,7 @@ ob_start();
 ?>
 $(function(){
   // Append an iFrame to the page.
-  var iframe = $('<iframe src="./child/"/>').insertAfter('#iframe-info');
+  var iframe = $('<iframe src="./child/" scrolling="no"/>').insertAfter('#iframe-info');
   
   // Called once the Iframe's content is loaded.
   iframe.load(function(){
@@ -192,28 +192,14 @@ ob_start();
 <?= $shell['donate'] ?>
 
 <p>
-  With <a href="http://benalman.com/projects/jquery-resize-plugin/">jQuery resize event</a>, you can bind
+  With <a href="http://benalman.com/projects/jquery-resize-plugin/">jQuery resize event</a>, you can now bind
   resize event handlers to elements other than window, for super-awesome-resizing-greatness!
-</p>
-
-<p>
-  Long ago, the powers-that-be decided that the resize event would only fire on the window object.
-  Unfortunately, that means that if you want to know when another element has resized, you need to
-  manually test its width and height, periodically, for changes. While this plugin doesn't do anything
-  fancy internally to obviate that approach, the interface it provides for binding the event is exactly
-  the same as what's already there for window.
-</p>
-
-<p>
-  Because window natively supports the resize event, nothing special is done there. For all other elements,
-  an internal polling loop is started (only once the event is bound to one or more non-window elements)
-  which periodically checks for element size changes and triggers the event when appropriate.
 </p>
 
 <h2>The resize event on block and inline elements</h2>
 
 <h3>Paragraph (block)</h3>
-<div class="container floaty">
+<div class="container floaty clear">
   <div class="info">N/A</div>
   <p class="test">
     <a href="#" class="add_text">Click this link to add text!</a> <em>Notice that the info box updates
@@ -264,10 +250,7 @@ ob_start();
 
 <div class="info" id="window-info">N/A</div>
 <p>
-  Because the window object has its own resize event, it doesn't need to be provided by this plugin, and its execution can be left entirely up to the browser. However, since certain browsers fire the resize event continuously while others do not, the window resize event is throttled by default, making event behavior consistent across all elements.
-</p>
-<p>
-  Of course, you could just set the <a href="http://benalman.com/code/projects/jquery-resize/docs/files/jquery-ba-resize-js.html#jQuery.resize.throttleWindow"><code>jQuery.resize.throttleWindow</code></a> property to <code>false</code> to disable this, but why would you?
+  By default, the window resize event is throttled, making event behavior consistent across all elements (this can be disabled by setting <a href="http://benalman.com/code/projects/jquery-resize/docs/files/jquery-ba-resize-js.html#jQuery.resize.throttleWindow"><code>jQuery.resize.throttleWindow</code></a> property to <code>false</code>).
 </p>
 <p>
   Just watch the "window" info box in the top right of the page as you resize the window to see how the event fires.
