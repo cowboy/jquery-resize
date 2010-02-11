@@ -1,5 +1,5 @@
 /*!
- * jQuery resize event - v1.0 - 2/9/2010
+ * jQuery resize event - v1.0 - 2/10/2010
  * http://benalman.com/projects/jquery-resize-plugin/
  * 
  * Copyright (c) 2010 "Cowboy" Ben Alman
@@ -9,7 +9,7 @@
 
 // Script: jQuery resize event
 //
-// *Version: 1.0, Last updated: 2/9/2010*
+// *Version: 1.0, Last updated: 2/10/2010*
 // 
 // Project Home - http://benalman.com/projects/jquery-resize-plugin/
 // GitHub       - http://github.com/cowboy/jquery-resize/
@@ -35,13 +35,13 @@
 // tested with, what browsers it has been tested in, and where the unit tests
 // reside (so you can test it yourself).
 // 
-// jQuery Versions - 1.3.2, 1.4.1, 1.4.2pre
+// jQuery Versions - 1.3.2, 1.4.1
 // Browsers Tested - Internet Explorer 6-8, Firefox 2-3.6, Safari 3-4, Chrome, Opera 9.6-10.1.
 // Unit Tests      - http://benalman.com/code/projects/jquery-resize/unit/
 // 
 // About: Release History
 // 
-// 1.0 - (2/9/2010) Initial release
+// 1.0 - (2/10/2010) Initial release
 
 (function($,window,undefined){
   '$:nomunge'; // Used by YUI compressor.
@@ -78,7 +78,7 @@
   // provided by this plugin, and its execution can be left entirely up to the
   // browser. However, since certain browsers fire the resize event continuously
   // while others do not, enabling this will throttle the window resize event,
-  // making event behavior consistent across all elements.
+  // making event behavior consistent across all elements in all browsers.
   // 
   // While setting this property to false will disable window object resize
   // event throttling, please note that this property must be changed before any
@@ -91,7 +91,8 @@
   // Fired when an element's width or height changes. Because browsers only
   // provide this event for the window element, for other elements a polling
   // loop is initialized, running every <jQuery.resize.delay> milliseconds
-  // to see if elements' dimensions have changed.
+  // to see if elements' dimensions have changed. You may bind with either
+  // .resize( fn ) or .bind( "resize", fn ), and unbind with .unbind( "resize" ).
   // 
   // Usage:
   // 
@@ -103,7 +104,8 @@
   // Additional Notes:
   // 
   // * The polling loop is not created until at least one callback is actually
-  //   bound to 'resize', and a single polling loop is shared for all elements.
+  //   bound to the 'resize' event, and this single polling loop is shared
+  //   across all elements.
   // 
   // Double firing issue in jQuery 1.3.2:
   // 

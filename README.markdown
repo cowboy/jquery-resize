@@ -1,7 +1,7 @@
 # jQuery resize event #
 [http://benalman.com/projects/jquery-resize-plugin/](http://benalman.com/projects/jquery-resize-plugin/)
 
-Version: 1.0, Last updated: 2/9/2010
+Version: 1.0, Last updated: 2/10/2010
 
 With jQuery resize event, you can bind resize event handlers to elements other than window, for super-awesome-resizing-greatness!
 
@@ -37,7 +37,7 @@ Internet Explorer 6-8, Firefox 2-3.6, Safari 3-4, Chrome, Opera 9.6-10.1.
 
 ## Release History ##
 
-1.0 - (2/9/2010) Pre-Initial release
+1.0 - (2/10/2010) Initial release
 
 
 ## License ##

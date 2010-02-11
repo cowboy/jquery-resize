@@ -31,7 +31,7 @@ test( 'block element', function() {
       equals( sizes.length, 0, 'event not yet fired' );
       
       div.resize();
-      equals( sizes.length, 1, 'event not yet fired' );
+      equals( sizes.length, 1, 'event should fire once' );
       equals( sizes[sizes.length-1].w, 200, 'size measured correctly' );
       equals( sizes[sizes.length-1].h, 100, 'size measured correctly' );
       
@@ -102,7 +102,7 @@ test( 'inline element', function() {
       equals( sizes.length, 0, 'event not yet fired' );
       
       span.resize();
-      equals( sizes.length, 1, 'event not yet fired' );
+      equals( sizes.length, 1, 'event should fire once' );
       equals( sizes[sizes.length-1].w, w, 'size measured correctly' );
       equals( sizes[sizes.length-1].h, h, 'size measured correctly' );
       
@@ -123,7 +123,7 @@ test( 'inline element', function() {
       }, 500);
     },
     function(){
-      span.html('this is some longer text<br>this is some longer text');
+      span.html('this is some even longer text<br>this is some even longer text');
       
       var w = span.width(),
         h = span.height();
@@ -169,21 +169,18 @@ test( 'inline element', function() {
   next();
 });
 
-if ( location.hash.indexOf( 'window' ) === -1 ) {
-  $('<h3>Window resize testing can only happen in a JavaScript-opened popup window. <a href="#">Click here to open that window.</a></h3>')
+if ( !window.opener ) {
+  $('<h3>The Window resize tests can only happen in a JavaScript-opened popup window. <a href="#">Click here to open that window.</a></h3>')
     .insertBefore('#qunit-tests')
     .find('a')
       .click(function(){
-        window.open( location.href.replace( /#.*/, '' ) + '#window', 'win', 'width=800,height=600,scrollbars=1,resizable=1' );
+        window.open( location.href, 'win', 'width=800,height=600,scrollbars=1,resizable=1' );
         return false;
       });
   
   return;
 } else {
-  $('#qunit-userAgent').next().find('a').each(function(){
-    var that = $(this);
-    that.attr( 'href', that.attr( 'href' ) + '#window' );
-  });
+  $('#qunit-header a').attr( 'target', '_blank' );
 }
 
 test( 'window', function() {
@@ -234,7 +231,6 @@ test( 'window', function() {
         } else {
           equal( sizes.length, 1, 'event should only fire once' );
         }
-        console.log( sizes );
         next();
       }, 500);
       
