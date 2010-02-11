@@ -11,7 +11,7 @@
  * Copyright 2010, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: Mon Feb 8 23:28:15 2010 -0500
+ * Date: Thu Feb 11 01:42:51 2010 -0500
  */
 (function( window, undefined ) {
 
@@ -1773,7 +1773,7 @@ jQuery.event = {
 			}
 
 			// remove generic event handler if no more handlers exist
-			if ( jQuery.isEmptyObject( events[ type ] ) ) {
+			if ( eventType.length === 0 || pos != null && eventType.length === 1 ) {
 				if ( !special.teardown || special.teardown.call( elem, namespaces ) === false ) {
 					removeEvent( elem, type, elemData.handle );
 				}
@@ -2229,8 +2229,7 @@ if ( !jQuery.support.submitBubbles ) {
 		},
 
 		teardown: function( namespaces ) {
-			jQuery.event.remove( this, "click.specialSubmit" );
-			jQuery.event.remove( this, "keypress.specialSubmit" );
+			jQuery.event.remove( this, ".specialSubmit" );
 		}
 	};
 
@@ -2330,9 +2329,7 @@ if ( !jQuery.support.changeBubbles ) {
 		},
 
 		teardown: function( namespaces ) {
-			for ( var type in changeFilters ) {
-				jQuery.event.remove( this, type + ".specialChange", changeFilters[type] );
-			}
+			jQuery.event.remove( this, ".specialChange" );
 
 			return formElems.test( this.nodeName );
 		}
@@ -4751,15 +4748,15 @@ var jsc = now(),
 	rquery = /\?/,
 	rts = /(\?|&)_=.*?(&|$)/,
 	rurl = /^(\w+:)?\/\/([^\/?#]+)/,
-	r20 = /%20/g;
+	r20 = /%20/g,
+
+	// Keep a copy of the old load method
+	_load = jQuery.fn.load;
 
 jQuery.fn.extend({
-	// Keep a copy of the old load
-	_load: jQuery.fn.load,
-
 	load: function( url, params, callback ) {
 		if ( typeof url !== "string" ) {
-			return this._load( url );
+			return _load.call( this, url );
 
 		// Don't do a request if no elements are being requested
 		} else if ( !this.length ) {
