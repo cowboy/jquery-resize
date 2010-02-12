@@ -50,8 +50,8 @@ $(function(){
   
   // Called once the Iframe's content is loaded.
   iframe.load(function(){
-    // The Iframe's child page HTML element.
-    var iframe_content = iframe.contents().find('html');
+    // The Iframe's child page BODY element.
+    var iframe_content = iframe.contents().find('body');
     
     // Bind the resize event. When the iframe's size changes, update its height as
     // well as the corresponding info div.
@@ -59,7 +59,7 @@ $(function(){
       var elem = $(this);
       
       // Resize the IFrame.
-      iframe.css({ height: elem.height() });
+      iframe.css({ height: elem.outerHeight( true ) });
       
       // Update the info div width and height.
       $('#iframe-info').text( 'IFRAME width: ' + elem.width() + ', height: ' + elem.height() );
