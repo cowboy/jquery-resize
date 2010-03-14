@@ -1,5 +1,5 @@
 /*!
- * jQuery resize event - v1.0 - 2/10/2010
+ * jQuery resize event - v1.1 - 3/14/2010
  * http://benalman.com/projects/jquery-resize-plugin/
  * 
  * Copyright (c) 2010 "Cowboy" Ben Alman
@@ -9,7 +9,7 @@
 
 // Script: jQuery resize event
 //
-// *Version: 1.0, Last updated: 2/10/2010*
+// *Version: 1.1, Last updated: 3/14/2010*
 // 
 // Project Home - http://benalman.com/projects/jquery-resize-plugin/
 // GitHub       - http://github.com/cowboy/jquery-resize/
@@ -35,12 +35,15 @@
 // tested with, what browsers it has been tested in, and where the unit tests
 // reside (so you can test it yourself).
 // 
-// jQuery Versions - 1.3.2, 1.4.1, 1.4.2pre
+// jQuery Versions - 1.3.2, 1.4.1, 1.4.2
 // Browsers Tested - Internet Explorer 6-8, Firefox 2-3.6, Safari 3-4, Chrome, Opera 9.6-10.1.
 // Unit Tests      - http://benalman.com/code/projects/jquery-resize/unit/
 // 
 // About: Release History
 // 
+// 1.1 - (3/14/2010) Fixed a minor bug that was causing the event to trigger
+//       immediately after bind in some circumstances. Also changed $.fn.data
+//       to $.data to improve performance.
 // 1.0 - (2/10/2010) Initial release
 
 (function($,window,undefined){
@@ -139,7 +142,7 @@
       elems = elems.add( elem );
       
       // Initialize data store on the element.
-      elem.data( str_data, { width: elem.width(), height: elem.height() } );
+      $.data( this, str_data, { w: elem.width(), h: elem.height() } );
       
       // If this is the first element added, start the polling loop.
       if ( elems.length === 1 ) {
@@ -187,7 +190,7 @@
       
       function new_handler( e, w, h ) {
         var elem = $(this),
-          data = elem.data( str_data );
+          data = $.data( this, str_data );
         
         // If called from the polling loop, w and h will be passed in as
         // arguments. If called manually, via .trigger( 'resize' ) or .resize(),
@@ -213,26 +216,31 @@
     
   };
   
-  // Start the polling loop.
   function loopy() {
     
-    // Iterate over all elements to which the 'resize' event is bound.
-    elems.each(function(){
-      var elem = $(this),
-        width = elem.width(),
-        height = elem.height(),
-        data = elem.data( str_data );
+    // Start the polling loop, asynchronously.
+    timeout_id = window[ str_setTimeout ](function(){
       
-      // If element size has changed since the last time, update the element
-      // data store and trigger the 'resize' event.
-      if ( width !== data.w || height !== data.h ) {
-        elem.trigger( str_resize, [ data.w = width, data.h = height ] );
-      }
+      // Iterate over all elements to which the 'resize' event is bound.
+      elems.each(function(){
+        var elem = $(this),
+          width = elem.width(),
+          height = elem.height(),
+          data = $.data( this, str_data );
+        
+        // If element size has changed since the last time, update the element
+        // data store and trigger the 'resize' event.
+        if ( width !== data.w || height !== data.h ) {
+          elem.trigger( str_resize, [ data.w = width, data.h = height ] );
+        }
+        
+      });
       
-    });
+      // Loop.
+      loopy();
+      
+    }, jq_resize[ str_delay ] );
     
-    // Loop.
-    timeout_id = window[ str_setTimeout ]( loopy, jq_resize[ str_delay ] );
   };
   
 })(jQuery,this);

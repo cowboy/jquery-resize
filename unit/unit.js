@@ -19,15 +19,19 @@ test( 'block element', function() {
   expect( 9 );
   
   var div = $('<div style="width:200px;height:100px;line-height:1px"/>').appendTo('body'),
+    div2 = $('<div/>').appendTo('body'),
     sizes = [];
   
   tests = [
     function(){
-      div.resize(function(e){
+      div.add(div2).resize(function(e){
         var elem = $(this);
         sizes.push({ w: elem.width(), h: elem.height() });
       });
       
+      setTimeout( next, 500 );
+    },
+    function(){
       equals( sizes.length, 0, 'event not yet fired' );
       
       div.resize();
@@ -64,7 +68,7 @@ test( 'block element', function() {
     },
     function(){
       sizes = []
-      div.unbind( 'resize' );
+      div.add(div2).unbind( 'resize' );
       div.css({ width: 200, height: 100 });
       
       setTimeout(function(){
